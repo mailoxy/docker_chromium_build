@@ -1,0 +1,17 @@
+version: '3.5'
+services:
+
+    chromium_build:
+      build: ./build
+      volumes: 
+        - /mnt/data:/mnt/data
+        - ./build:/mnt/build
+      entrypoint: /mnt/build/build.sh
+      deploy:
+        resources:
+          limits:
+            cpus: '10'
+            memory: 8192M
+      env_file:
+        - .env
+
