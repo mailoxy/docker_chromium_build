@@ -3,7 +3,7 @@
 set -e
 
 mkdir -p $DIR/src && cd $DIR
-#rm -rf $DIR/src/out/Default
+rm -rf $DIR/src/out
 mkdir -p $DIR/src/out/Default
 
 rm -rf $DIR/chromium_patches
@@ -13,7 +13,7 @@ fetch --nohooks chromium || true
 cd $DIR/src
 git reset --hard
 echo "target_os = [ 'android' ]" >> ../.gclient
-gclient sync --with_branch_heads --jobs 6
+gclient sync --with_branch_heads --jobs 6 -RDf
 build/install-build-deps-android.sh
 build/linux/sysroot_scripts/install-sysroot.py --all
 gclient runhooks
