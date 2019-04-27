@@ -2,26 +2,27 @@
 
 set -e
 
+git config --global user.name "Your Name"
+git config --global user.email "you@example.org"
+
 mkdir -p $DIR/src && cd $DIR
-rm -rf $DIR/src/out
-mkdir -p $DIR/src/out/Default
-
-rm -rf $DIR/chromium_patches
-git clone https://github.com/AndroidHardeningArchive/chromium_patches
-
-fetch --nohooks chromium || true
+fetch --nohooks android || true
 cd $DIR/src
-git reset --hard
 echo "target_os = [ 'android' ]" >> ../.gclient
-gclient sync --with_branch_heads --jobs 6 -RDf
+git clean -d -x -f
+gclient sync --jobs 6 -D -r $VER
+mkdir -p $DIR/src/out/Default
 build/install-build-deps-android.sh
 build/linux/sysroot_scripts/install-sysroot.py --all
 gclient runhooks
 
-git reset --hard $REF
+cd $DIR && rm -rf $DIR/chromium_patches
+git clone https://github.com/AndroidHardeningArchive/chromium_patches
+
+cd $DIR/src
 
 for patch in ../chromium_patches/*.patch; do
-    patch -p1 --no-backup-if-mismatch < $patch
+    git am $patch || git am --abort
 done
 
 cat << EOF > out/Default/args.gn
@@ -49,5 +50,4 @@ EOF
 
 gn gen out/Default
 
-ninja -C out/Default/ monochrome_public_apk
-
+autoninja -C out/Default/ monochrome_public_apk
