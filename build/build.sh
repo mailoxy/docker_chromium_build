@@ -17,11 +17,11 @@ build/linux/sysroot_scripts/install-sysroot.py --all
 gclient runhooks
 
 cd $DIR && rm -rf $DIR/chromium_patches
-git clone https://github.com/AndroidHardeningArchive/chromium_patches
+git clone https://github.com/GrapheneOS/Vanadium.git
 
 cd $DIR/src
 
-for patch in ../chromium_patches/*.patch; do
+for patch in ../Vanadium/*.patch; do
     git am $patch || git am --abort
 done
 
