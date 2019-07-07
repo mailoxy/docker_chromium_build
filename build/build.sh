@@ -16,7 +16,7 @@ build/install-build-deps-android.sh
 build/linux/sysroot_scripts/install-sysroot.py --all
 gclient runhooks
 
-cd $DIR && rm -rf $DIR/chromium_patches
+cd $DIR && rm -rf $DIR/Vanadium
 git clone https://github.com/GrapheneOS/Vanadium.git
 
 cd $DIR/src
