@@ -5,12 +5,13 @@ set -e
 git config --global user.name "Your Name"
 git config --global user.email "you@example.org"
 
-mkdir -p $DIR/src && cd $DIR
+mkdir -p $DIR && cd $DIR
 fetch --nohooks android || true
 cd $DIR/src
 echo "target_os = [ 'android' ]" >> ../.gclient
+#[ -d $DIR/src/.git ] && 
 git clean -d -x -f
-gclient sync --jobs 6 -D -r $VER
+gclient sync --with_branch_heads --jobs 6 -D -r $VER
 mkdir -p $DIR/src/out/Default
 build/install-build-deps-android.sh
 build/linux/sysroot_scripts/install-sysroot.py --all
